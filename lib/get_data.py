@@ -6,8 +6,8 @@ import pprint
 
 class GetData(object):
 
-    def __init__(self):
-        self.token = Authentication('admin', 'Sep@2018').logon()
+    def __init__(self, username, password):
+        self.token = Authentication(username, password).logon()
         self.headers = {'Authorization': 'Bearer {}'.format(self.token)}
 
     def get_groups(self):
