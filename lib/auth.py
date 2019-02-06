@@ -1,4 +1,5 @@
 from requests import post
+from lib.config import server
 from json import dumps, loads
 from urllib3 import disable_warnings, exceptions
 
@@ -15,7 +16,7 @@ class Authentication(object):
     def logon(self):
         try:
             data = dumps({'username': self.username, 'password': self.password, 'domain': ''})
-            response = post('https://sav340206.brb.com.br:8446/sepm/api/v1/identity/authenticate',
+            response = post(server + '/sepm/api/v1/identity/authenticate',
                             headers=self.headers, data=data, verify=False)
             return loads(response.text)['token']
         except Exception as e:
@@ -23,6 +24,6 @@ class Authentication(object):
 
     def logout(self):
         try:
-            post('https://sav340206.brb.com.br:8446/sepm/api/v1/identity/logout', headers=self.headers, verify=False)
+            post(server + '/sepm/api/v1/identity/logout', headers=self.headers, verify=False)
         except Exception as e:
             print(e)
