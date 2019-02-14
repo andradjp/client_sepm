@@ -17,13 +17,15 @@ class GetData(object):
         return group_list
 
     def get_computers_from_group(self, group_id):
-        # response = get(server + '/sepm/api/v1/computers', headers=self.headers, verify=False)
         response = get(server + '/sepm/api/v1/groups/{}/computers'.format(group_id), headers=self.headers, verify=False)
         computer_list = loads(response.text)['content']
-        print(len(computer_list))
+        f = open('computers_from_group.json','w+')
+        f.write(dumps(computer_list))
+        f.close()
+        return computer_list
 
     def get_computers(self, pageIndex=1):
-        response = get(server + '/sepm/api/v1/computers/?pageIndex={}'.format(pageIndex), headers=self.headers, verify=False)
+        response = get(server + '/sepm/api/v1/computers/?pageSize=100&pageIndex={}'.format(pageIndex), headers=self.headers, verify=False)
         return loads(response.text)
 
     def get_all_computers(self):
@@ -31,18 +33,23 @@ class GetData(object):
         response = self.get_computers()
         for i in range(1,response['totalPages']):
             response = self.get_computers(i)
-            print(response['number'])
             for x in response['content']:
+                hosts[x['computerName']] = {'macAddress': x['macAddresses'][0]}
                 if len(x['ipAddresses']) == 1:
-                    hosts[x['computerName']] = x['ipAddresses'][0]
+                    hosts[x['computerName']].update({'ipAddress': x['ipAddresses'][0],'group_id': x['group']['id']})
                 elif len(x['ipAddresses']) == 2:
                     for y in x['ipAddresses']:
                         if ip_address(y).version == 4:
-                            hosts[x['computerName']] = y
+                            hosts[x['computerName']].update({'ipAddress': y,'group_id': x['group']['id']})
             sleep(3)
-        print(len(hosts))
+        f = open('list_computers.json','w+')
+        f.write(str(dumps(hosts)))
+        f.close()
 
+    def get_servers(self):
+        response = get(server + '/sepm/api/v1/admin/servers', headers=self.headers, verify=False)
+        return response.text
 
     def get_version(self):
         response = get(server + '/sepm/api/v1/version', headers=self.headers, verify=False)
-        print(response.text)
+        return response.text
