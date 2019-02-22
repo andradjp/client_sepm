@@ -1,4 +1,4 @@
-from requests import get, post
+from requests import get
 from lib.auth import Authentication
 from lib.config import server
 from json import loads, dumps
@@ -12,8 +12,14 @@ class GetData(object):
         self.headers = {'Authorization': 'Bearer {}'.format(self.token)}
 
     def get_groups(self):
+        list_groups = {}
         response = get(server + '/sepm/api/v1/groups', headers=self.headers, verify=False)
         group_list = loads(response.text)['content']
+        for x in group_list:
+            list_groups[x['name']] = x['id']
+        f = open('list_group.json','w+')
+        f.write(str(list_groups))
+        f.close()
         return group_list
 
     def get_computers_from_group(self, group_id):
@@ -31,8 +37,9 @@ class GetData(object):
     def get_all_computers(self):
         hosts = {}
         response = self.get_computers()
-        for i in range(1,response['totalPages']):
+        for i in range(1,response['totalPages']+1):
             response = self.get_computers(i)
+            print(response['lastPage'])
             for x in response['content']:
                 hosts[x['computerName']] = {'macAddress': x['macAddresses'][0]}
                 if len(x['ipAddresses']) == 1:
