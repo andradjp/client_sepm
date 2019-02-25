@@ -41,7 +41,7 @@ class GetData(object):
             response = self.get_computers(i)
             print(response['lastPage'])
             for x in response['content']:
-                hosts[x['computerName']] = {'macAddress': x['macAddresses'][0]}
+                hosts[x['computerName']] = {'macAddress': x['macAddresses'][0], 'hardwareKey': x['hardwareKey']}
                 if len(x['ipAddresses']) == 1:
                     hosts[x['computerName']].update({'ipAddress': x['ipAddresses'][0],'group_id': x['group']['id']})
                 elif len(x['ipAddresses']) == 2:
