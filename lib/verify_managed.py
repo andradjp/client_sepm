@@ -1,6 +1,6 @@
 import subprocess
 import re
-from socket import gethostbyaddr
+from json import loads
 
 def get_ttl(ip):
     p = subprocess.Popen(['ping', ip, '-c 1 -v'], stdout=subprocess.PIPE)
@@ -26,3 +26,11 @@ def get_mac(ip):
         pattern = re.compile('\S\S:\S\S:\S\S:\S\S:\S\S:\S\S')
         mac = pattern.search(str(result)).group().replace(':','-').upper()
         return mac
+
+def verify_managed(mac):
+
+    f = loads(open('list_computers.json','r').read())
+    for x in f:
+        if mac == f[x]['macAddress']:
+            return True
+    return False
