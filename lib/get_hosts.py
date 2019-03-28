@@ -1,15 +1,21 @@
 import subprocess
 import re
+from socket import gethostbyaddr
 
 def get_ttl(ip):
-    p = subprocess.Popen(['ping', ip, '-c 3 -v'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['ping', ip, '-c 1 -v'], stdout=subprocess.PIPE)
     result = p.communicate()[0]
     if p.returncode > 0:
-        print('Erro durante o ping!')
+        return 0
     else:
-        pattern = re.compile('ttl=\d\d\d')
-        ttl = pattern.search(str(result)).group().strip('ttl=')
-        return ttl
+        try:
+            pattern = re.compile('ttl=\d\d\d')
+            ttl = int(pattern.search(str(result)).group().strip('ttl='))
+            return ttl
+        except ValueError as e:
+            return 0
+        except AttributeError as e:
+            return 0
 
 def get_mac(ip):
     p = subprocess.Popen(['arp', ip], stdout=subprocess.PIPE)
@@ -20,5 +26,3 @@ def get_mac(ip):
         pattern = re.compile('\S\S:\S\S:\S\S:\S\S:\S\S:\S\S')
         mac = pattern.search(str(result)).group().replace(':','-').upper()
         return mac
-
-print(get_mac('10.2.1.115'))

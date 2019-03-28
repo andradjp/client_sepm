@@ -18,7 +18,7 @@ class GetData(object):
         for x in group_list:
             list_groups[x['name']] = x['id']
         f = open('list_group.json','w+')
-        f.write(str(list_groups))
+        f.write(dumps(list_groups))
         f.close()
         return group_list
 
@@ -39,7 +39,6 @@ class GetData(object):
         response = self.get_computers()
         for i in range(1,response['totalPages']+1):
             response = self.get_computers(i)
-            print(response['lastPage'])
             for x in response['content']:
                 hosts[x['computerName']] = {'macAddress': x['macAddresses'][0], 'hardwareKey': x['hardwareKey']}
                 if len(x['ipAddresses']) == 1:
@@ -59,4 +58,9 @@ class GetData(object):
 
     def get_version(self):
         response = get(server + '/sepm/api/v1/version', headers=self.headers, verify=False)
+        return response.text
+
+    def get_computer_info(self, computer_name):
+        response = get(server + '/sepm/api/v1/computers/?computerName={}'.format(computer_name), headers=self.headers, verify=False)
+        print(response.text)
         return response.text

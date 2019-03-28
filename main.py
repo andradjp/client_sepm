@@ -4,8 +4,9 @@ from lib.config import username, password
 
 if __name__ == '__main__':
     # i = GetData(username,password)
+    # i.get_computer_info('et154019524')
     # i.get_groups()
     # i.get_all_computers()
     m = MoveComputer(username,password)
     m.move_computer()
-    # i.get_computers_from_group('0F120C410A01017D0C3B1382B5E942FC')
+    # i.get_computers_from_group('8E73CC080A01017D3F280D0250EB47B9')
