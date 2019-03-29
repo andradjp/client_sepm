@@ -19,6 +19,3 @@ class GetUnmanagedClients(object):
                     self.unmanaged_list.append({'hostName':gethostbyaddr(str(x))[0],'ipAddress':str(x),
                                                 'MAC':self.v.get_mac(str(x))})
         return self.unmanaged_list
-
-g = GetUnmanagedClients('10.2.1.0/24')
-print(g.get_clients())
