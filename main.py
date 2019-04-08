@@ -5,10 +5,10 @@ from lib.unmanaged_clients import GetUnmanagedClients
 from lib.send_mail import send_email
 
 if __name__ == '__main__':
-    i = GetData(username,password)
+    # i = GetData(username,password)
     # i.get_computer_info('et154019524')
     # i.get_groups()
-    i.get_all_computers()
+    # i.get_all_computers()
     # m = MoveComputer(username,password)
     # m.move_computer()
     # i.get_computers_from_group('8E73CC080A01017D3F280D0250EB47B9')
@@ -17,7 +17,7 @@ if __name__ == '__main__':
         g = GetUnmanagedClients(x)
         message = ''
         for y in g.get_clients():
-             message += ('Hostname: {} IP Address: {} MAC Address: {} \n'.format(y['hostName'], y['ipAddress'], y['MAC']))
+            message += ('Hostname: {} IP Address: {} \n'.format(y['hostName'], y['ipAddress']))
         if message != '':
             send_email(x, 'Unmanaged hosts {}'.format(x), message)
     # g = GetUnmanagedClients('10.2.1.8/29')

@@ -1,6 +1,7 @@
 import lib.verify_managed
 from ipaddress import IPv4Network
 from socket import gethostbyaddr
+import socket
 
 class GetUnmanagedClients(object):
 
@@ -14,8 +15,9 @@ class GetUnmanagedClients(object):
         for x in IPv4Network(self.ip_range).hosts():
             ttl = self.v.get_ttl(str(x))
             if (ttl > 120) and (ttl < 130):
-                mac = self.v.get_mac(str(x))
-                if not self.v.verify_managed(mac):
-                    self.unmanaged_list.append({'hostName':gethostbyaddr(str(x))[0],'ipAddress':str(x),
-                                                'MAC':self.v.get_mac(str(x))})
+                if not self.v.verify_managed(x):
+                    try:
+                        self.unmanaged_list.append({'hostName':gethostbyaddr(str(x))[0],'ipAddress':str(x)})
+                    except socket.herror:
+                        self.unmanaged_list.append({'hostName': 'Reverso nao configurado', 'ipAddress': str(x)})
         return self.unmanaged_list

@@ -40,13 +40,11 @@ class GetData(object):
         for i in range(1,response['totalPages']+1):
             response = self.get_computers(i)
             for x in response['content']:
-                hosts[x['computerName']] = {'macAddress': x['macAddresses'][0], 'hardwareKey': x['hardwareKey']}
-                if len(x['ipAddresses']) == 1:
-                    hosts[x['computerName']].update({'ipAddress': x['ipAddresses'][0],'group_id': x['group']['id']})
-                elif len(x['ipAddresses']) == 2:
-                    for y in x['ipAddresses']:
-                        if ip_address(y).version == 4:
-                            hosts[x['computerName']].update({'ipAddress': y,'group_id': x['group']['id']})
+                hosts[x['computerName']] = {'macAddress': x['macAddresses'][0], 'hardwareKey': x['hardwareKey'],
+                                            'ipAddress': []}
+                for k in x['ipAddresses']:
+                    if ip_address(k).version == 4:
+                        hosts[x['computerName']]['ipAddress'].append(k)
             sleep(3)
         f = open('list_computers.json','w+')
         f.write(str(dumps(hosts)))
@@ -62,5 +60,4 @@ class GetData(object):
 
     def get_computer_info(self, computer_name):
         response = get(server + '/sepm/api/v1/computers/?computerName={}'.format(computer_name), headers=self.headers, verify=False)
-        print(response.text)
         return response.text
