@@ -1,7 +1,7 @@
 import smtplib
 
 
-def send_email(rede, subject, text):
+def send_email(rede, subject, content, text):
     sender = 'botnucom@brb.com.br'
     receivers = 'servnucomconectividade@brb.com.br'
     # O conteudo da mensagem não pode ter identação,
@@ -11,13 +11,13 @@ def send_email(rede, subject, text):
 To: NUCOM Seguranca <servnucomconectividade@brb.com.br>
 Subject: {}
 
-Hosts Windows nao gerenciados pela solucao Symantec!
+{}
 Rede: {}
 ----------------------------------------------------
 
 {}
 
-----------------------------------------------------'''.format(subject, rede, text)
+----------------------------------------------------'''.format(subject, text, rede, content)
 
     try:
         smtpObj = smtplib.SMTP('mail.brb.com.br')

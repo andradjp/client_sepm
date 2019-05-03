@@ -14,7 +14,7 @@ class GetUnmanagedClients(object):
 
         for x in IPv4Network(self.ip_range).hosts():
             ttl = self.v.get_ttl(str(x))
-            if (ttl > 120) and (ttl < 130):
+            if (ttl > 115) and (ttl < 130):
                 if not self.v.verify_managed(x):
                     try:
                         self.unmanaged_list.append({'hostName':gethostbyaddr(str(x))[0],'ipAddress':str(x)})

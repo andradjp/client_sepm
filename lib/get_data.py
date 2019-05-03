@@ -50,6 +50,17 @@ class GetData(object):
         f.write(str(dumps(hosts)))
         f.close()
 
+    def get_all_computers_pendent_reboot(self):
+        hosts = {}
+        response = self.get_computers()
+        for i in range(1, response['totalPages'] + 1):
+            response = self.get_computers(i)
+            for x in response['content']:
+                if x['rebootRequired'] == 1:
+                    hosts[x['computerName']] = {'ipAddresses':x['ipAddresses']}
+            sleep(3)
+        return hosts
+
     def get_servers(self):
         response = get(server + '/sepm/api/v1/admin/servers', headers=self.headers, verify=False)
         return response.text

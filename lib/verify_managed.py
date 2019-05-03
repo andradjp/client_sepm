@@ -1,7 +1,7 @@
 import subprocess
 import re
 from json import loads
-
+from time import sleep
 
 def get_ttl(ip):
     p = subprocess.Popen(['ping', ip, '-c 1 -v'], stdout=subprocess.PIPE)
